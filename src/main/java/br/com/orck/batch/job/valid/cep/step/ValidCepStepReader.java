@@ -15,9 +15,9 @@ public class ValidCepStepReader{
 	
 	@Bean
 	@StepScope
-	public FlatFileItemReader<ViacepResponse> getValidCepStepReader(@Value("#{jobParameters['nomeArquivo']}") Resource fileResource) throws Exception{
+	public FlatFileItemReader<ViacepResponse> getValidCepStepReader(@Value("#{jobParameters['nomeArquivo']}") Resource fileResource) throws InternalError{
 		String[] columnsArray = {"cep"};
-		if(!fileResource.exists()) throw new Exception("Arquivo não encontrado");
+		if(!fileResource.exists()) throw new InternalError("Arquivo não encontrado");
 		return new FlatFileItemReaderBuilder<ViacepResponse>()
 				.name("getValidCepStepReader")
 				.resource(fileResource)

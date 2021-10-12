@@ -36,8 +36,4 @@ public class BatchConfig {
 				.start(step)
 				.build();
 	}
-	
-	public ItemWriter<ViacepResponse> write(){
-		return itens -> itens.forEach(System.out::println);
-	}
 }
