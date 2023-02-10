@@ -43,24 +43,28 @@ public class ValidCepStepWriterTest {
 	@InjectMocks
 	private ValidCepStepWriter validCepStepWriter;
 	
+	private final String sql = "INSERT INTO localidades (cep, logradouro, localidade, bairro, uf, ibge, ddd) VALUES (?, ?, ?, ?, ?, ?, ?)"; 
 	
 	@Before
 	public void setUp() {
-		ReflectionTestUtils.setField(validCepStepWriter, "builder", builder);
+		
 		when(builder.dataSource(dataSource)).thenReturn(builder);
-		when(builder.sql(Mockito.anyString())).thenReturn(builder);
+		when(builder.sql(sql)).thenReturn(builder);
 		when(builder.itemPreparedStatementSetter(Mockito.any())).thenReturn(builder);
 		when(builder.build()).thenReturn(writer);
 	}
 	
 	@Test
 	public void write_SUCCESS() {
+		ReflectionTestUtils.setField(validCepStepWriter, "builder", builder);
 		var writer = validCepStepWriter.write(dataSource);
 		assertEquals(this.writer, writer);
+		verify(builder, times(1)).sql(sql);
 	}
 	
 	@Test
 	public void preparedStatementSetterTest() throws SQLException {
+		ReflectionTestUtils.setField(validCepStepWriter, "builder", builder);
 		var prep = validCepStepWriter.preparedStatementSetter();
 		var viaCep = MockUtils.getViacepResponse();
 		prep.setValues(viaCep , ps);
