@@ -23,20 +23,22 @@ public class ValidCepStepWriter {
 	private static final String VAR = "cep, logradouro, localidade, bairro, uf, ibge, ddd";
 	private static final String VAL = "?, ?, ?, ?, ?, ?, ?";
 	
+	private final JdbcBatchItemWriterBuilder<ViacepResponse> builder = new JdbcBatchItemWriterBuilder<ViacepResponse>();
+	
 	@Bean
 	public JdbcBatchItemWriter<ViacepResponse> write(DataSource dataSource){
 		String sql = SQLEnums.SIMPLE_INSERT.getSql()
 				.replace("{tab}", TABLE)
 				.replace("{var}", VAR)
 				.replace("{val}", VAL);
-		return new JdbcBatchItemWriterBuilder<ViacepResponse>()
+		return builder
 				.dataSource(dataSource)
 				.sql(sql)
 				.itemPreparedStatementSetter(preparedStatementSetter())
 				.build();
 	}
 
-	private ItemPreparedStatementSetter<ViacepResponse> preparedStatementSetter() {
+	protected ItemPreparedStatementSetter<ViacepResponse> preparedStatementSetter() {
 		return new ItemPreparedStatementSetter<ViacepResponse>() {
 
 			@Override
