@@ -2,9 +2,10 @@ package br.com.orck.batch.dao.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.UUID;
@@ -44,6 +45,7 @@ public class LocalidadesDAOImplTest {
 		
 		var rowChanged = localidadesDAOImpl.findIdByCep(UUID.randomUUID().toString());
 		assertTrue(rowChanged.isEmpty());
+		verify(jdbcTemplate, atLeastOnce()).queryForObject(Mockito.anyString(), Mockito.eq(Integer.class));
 	}
 	
 	@Test
@@ -51,6 +53,7 @@ public class LocalidadesDAOImplTest {
 		when(jdbcTemplate.queryForObject(Mockito.anyString(), Mockito.eq(Integer.class))).thenThrow(new EmptyResultDataAccessException("TESTE", 1));
 		
 		var rowChanged = localidadesDAOImpl.findIdByCep(UUID.randomUUID().toString());
+		verify(jdbcTemplate, atLeastOnce()).queryForObject(Mockito.anyString(), Mockito.eq(Integer.class));
 		assertTrue(rowChanged.isEmpty());
 	}
 	
@@ -62,6 +65,7 @@ public class LocalidadesDAOImplTest {
 			localidadesDAOImpl.findIdByCep(UUID.randomUUID().toString());
 			fail();
 		}catch (Exception e) {
+			verify(jdbcTemplate, atLeastOnce()).queryForObject(Mockito.anyString(), Mockito.eq(Integer.class));
 			assertEquals(NullPointerException.class, e.getClass());
 		}
 	}
